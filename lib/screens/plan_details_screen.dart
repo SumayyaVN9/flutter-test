@@ -431,8 +431,12 @@ class PlanDetailsScreen extends StatelessWidget {
                               width: 24,
                               height: 24,
                               fit: BoxFit.cover,
-                              placeholder: (_, __) => Container(width: 24, height: 24, color: Colors.grey[200]),
-                              errorWidget: (_, __, ___) => const Icon(Icons.flag, size: 20),
+                              placeholder: (_, __) => Container(
+                                  width: 24,
+                                  height: 24,
+                                  color: Colors.grey[200]),
+                              errorWidget: (_, __, ___) =>
+                                  const Icon(Icons.flag, size: 20),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -535,7 +539,8 @@ class PlanDetailsScreen extends StatelessWidget {
         width: 18,
         height: 18,
         fit: BoxFit.cover,
-        placeholder: (_, __) => Container(width: 18, height: 18, color: Colors.grey[200]),
+        placeholder: (_, __) =>
+            Container(width: 18, height: 18, color: Colors.grey[200]),
         errorWidget: (_, __, ___) =>
             Container(width: 18, height: 18, color: Colors.grey[300]),
       ),
