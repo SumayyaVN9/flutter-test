@@ -28,6 +28,10 @@ class AppAssets {
       'https://www.figma.com/api/mcp/asset/dcce4232-2497-4aaf-9f24-44afe7132442';
   static const String flagUS =
       'https://www.figma.com/api/mcp/asset/f0047061-5766-4d54-921a-2fb3b1dbd3af';
+  static const String flagGB =
+      'https://www.figma.com/api/mcp/asset/488f9d0d-10bc-4eb7-a80d-7df6d75952eb'; // UK flag
+  static const String flagVN =
+      'https://www.figma.com/api/mcp/asset/cbd6a1aa-031d-4351-8416-bbce2a5e8758'; // Vietnam flag
 
   // Popular destination images
   static const String destTurkey =

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
 import 'plan_details_screen.dart';
@@ -6,58 +8,84 @@ import 'plan_details_screen.dart';
 class PlansScreen extends StatelessWidget {
   const PlansScreen({super.key});
 
-  static const List<Map<String, String>> _plans = [
-    {
-      'name': 'Redwood Unlimited',
-      'data': '10GB',
-      'days': '30',
-      'price': '\$3.99',
-      'badge': 'Best Choice',
-    },
-    {
-      'name': 'Sierra 3GB',
-      'data': '5GB',
-      'days': '60',
-      'price': '\$3.99',
-      'badge': '',
-    },
-    {
-      'name': 'Unlimited 5GB',
-      'data': '5GB',
-      'days': '60',
-      'price': '\$3.99',
-      'badge': '',
-    },
-    {
-      'name': 'Guadalupe 10GB',
-      'data': '15GB',
-      'days': '90',
-      'price': '\$3.99',
-      'badge': '',
-    },
-    {
-      'name': 'Sierra 3GB',
-      'data': '5GB',
-      'days': '60',
-      'price': '\$3.99',
-      'badge': '',
-    },
-  ];
+  List<Map<String, String>> _plans(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {
+        'name': l10n.redwoodUnlimited,
+        'data': '10GB',
+        'days': '30',
+        'price': '\$3.99',
+        'badge': l10n.bestChoice,
+      },
+      {
+        'name': l10n.sierra3gb,
+        'data': '5GB',
+        'days': '60',
+        'price': '\$3.99',
+        'badge': '',
+      },
+      {
+        'name': l10n.unlimited5gb,
+        'data': '5GB',
+        'days': '60',
+        'price': '\$3.99',
+        'badge': '',
+      },
+      {
+        'name': l10n.guadalupe10gb,
+        'data': '15GB',
+        'days': '90',
+        'price': '\$3.99',
+        'badge': '',
+      },
+      {
+        'name': l10n.sierra3gb,
+        'data': '5GB',
+        'days': '60',
+        'price': '\$3.99',
+        'badge': '',
+      },
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    final plans = _plans(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Column(
         children: [
-          _buildHeader(),
+          _buildHeader(context),
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
-              itemCount: _plans.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) =>
-                  _buildPlanCard(context, _plans[index]),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final bool showTwoColumns = constraints.maxWidth >= 900;
+
+                if (showTwoColumns) {
+                  return GridView.builder(
+                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
+                    itemCount: plans.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      mainAxisExtent: 220,
+                    ),
+                    itemBuilder: (context, index) =>
+                        _buildPlanCard(context, plans[index]),
+                  );
+                }
+
+                return ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
+                  itemCount: plans.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) =>
+                      _buildPlanCard(context, plans[index]),
+                );
+              },
             ),
           ),
         ],
@@ -65,7 +93,7 @@ class PlansScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -79,9 +107,9 @@ class PlansScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Select Plan for',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.selectPlanFor,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -91,9 +119,9 @@ class PlansScreen extends StatelessWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Text(
-                          'USA & 1 more',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.usaAndOneMore,
+                          style: const TextStyle(
                             fontSize: 13,
                             color: Colors.black54,
                           ),
@@ -101,9 +129,9 @@ class PlansScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         GestureDetector(
                           onTap: () {},
-                          child: const Text(
-                            'Change',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.change,
+                            style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
@@ -115,10 +143,27 @@ class PlansScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: const Icon(Icons.tune_outlined,
-                    color: Colors.black87, size: 24),
+              GestureDetector(
+                onTap: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  }
+                },
+                child: Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE2E4EA),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.black87,
+                    size: 28,
+                  ),
+                ),
               ),
             ],
           ),
@@ -128,7 +173,8 @@ class PlansScreen extends StatelessWidget {
   }
 
   Widget _buildPlanCard(BuildContext context, Map<String, String> plan) {
-    final bool isBestChoice = plan['badge'] == 'Best Choice';
+    final bool isBestChoice =
+        plan['badge'] == AppLocalizations.of(context)!.bestChoice;
 
     return GestureDetector(
       onTap: () => Navigator.push(
@@ -174,8 +220,8 @@ class PlansScreen extends StatelessWidget {
                         color: Colors.white, size: 14),
                     const SizedBox(width: 6),
                     Text(
-                      plan['badge']!,
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.bestChoice,
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -192,20 +238,8 @@ class PlansScreen extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  Positioned(
-                    right: -56,
-                    top: -64,
-                    child: Container(
-                      width: 190,
-                      height: 190,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: const Color(0xFFE8E8EE).withValues(alpha: 0.9),
-                      ),
-                    ),
-                  ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
                     child: Column(
                       children: [
                         Row(
@@ -237,13 +271,16 @@ class PlansScreen extends StatelessWidget {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            _planStat(plan['data']!, 'Data'),
+                            _planStat(context, plan['data']!,
+                                AppLocalizations.of(context)!.data),
                             const SizedBox(width: 18),
-                            _planStat(plan['days']!, 'Days'),
+                            _planStat(context, plan['days']!,
+                                AppLocalizations.of(context)!.days),
                             const SizedBox(width: 18),
                             _planStat(
+                              context,
                               '5G',
-                              'Network',
+                              AppLocalizations.of(context)!.network,
                               valueColor: const Color(0xFF2AA84A),
                             ),
                           ],
@@ -258,7 +295,7 @@ class PlansScreen extends StatelessWidget {
                             _flagChip(AppAssets.flagDE),
                             const SizedBox(width: 6),
                             Text(
-                              '+40 other',
+                              AppLocalizations.of(context)!.other40Plus,
                               style: TextStyle(
                                 fontSize: 11,
                                 color: Colors.black.withValues(alpha: 0.55),
@@ -286,9 +323,9 @@ class PlansScreen extends StatelessWidget {
                                   ),
                                   elevation: 0,
                                 ),
-                                child: const Text(
-                                  'Buy',
-                                  style: TextStyle(
+                                child: Text(
+                                  AppLocalizations.of(context)!.buy,
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -309,7 +346,8 @@ class PlansScreen extends StatelessWidget {
     );
   }
 
-  Widget _planStat(String value, String label, {Color? valueColor}) {
+  Widget _planStat(BuildContext context, String value, String label,
+      {Color? valueColor}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -334,16 +372,13 @@ class PlansScreen extends StatelessWidget {
 
   Widget _flagChip(String url) {
     return ClipOval(
-      child: Image.network(
-        url,
+      child: CachedNetworkImage(
+        imageUrl: url,
         width: 18,
         height: 18,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Container(
-          width: 18,
-          height: 18,
-          color: Colors.grey[300],
-        ),
+        placeholder: (_, __) => Container(width: 18, height: 18, color: Colors.grey[200]),
+        errorWidget: (_, __, ___) => Container(width: 18, height: 18, color: Colors.grey[300]),
       ),
     );
   }

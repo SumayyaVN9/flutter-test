@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../main.dart';
 import 'plans_screen.dart';
 import 'search_screen.dart';
 
@@ -28,15 +31,18 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         _buildEmptyPlansCard(context),
                         const SizedBox(height: 12),
-                        _buildGlobalPlanCard(),
+                        _buildGlobalPlanCard(context),
                         const SizedBox(height: 16),
-                        _buildSectionTitle('Most Searched Locations'),
+                        _buildSectionTitle(
+                            context,
+                            AppLocalizations.of(context)!
+                                .mostSearchedLocations),
                         const SizedBox(height: 10),
-                        _buildLocationChips(),
+                        _buildLocationChips(context),
                         const SizedBox(height: 16),
                         _buildPopularHeader(context),
                         const SizedBox(height: 10),
-                        _buildPopularGrid(),
+                        _buildPopularGrid(context),
                       ],
                     ),
                   ),
@@ -44,19 +50,24 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             // Floating chat button
-            Positioned(
-              bottom: 90,
-              right: 14,
-              child: Container(
-                width: 56,
-                height: 56,
-                decoration: const BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.chat_bubble_outline,
-                    color: Colors.white, size: 24),
-              ),
+            Builder(
+              builder: (context) {
+                final isWeb = MediaQuery.of(context).size.width > 600;
+                return Positioned(
+                  bottom: isWeb ? 24 : 86,
+                  right: isWeb ? 24 : 16,
+                  child: Container(
+                    width: 56,
+                    height: 56,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.chat_bubble_outline,
+                        color: Colors.white, size: 24),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -71,38 +82,106 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           RichText(
-            text: const TextSpan(
-              style: TextStyle(
+            text: TextSpan(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textBlack,
                 letterSpacing: 0.12,
               ),
               children: [
-                TextSpan(text: 'Hello, '),
-                TextSpan(text: 'Mahima'),
+                TextSpan(text: '${AppLocalizations.of(context)!.hello} '),
+                TextSpan(text: AppLocalizations.of(context)!.userName),
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const SearchScreen())),
-            child: Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF365CC3).withValues(alpha: 0.04),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
+          Row(
+            children: [
+              // Language Switch Button
+              Theme(
+                data: Theme.of(context).copyWith(
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                ),
+                child: PopupMenuButton<String>(
+                  tooltip: '',
+                  splashRadius: 0,
+                  onSelected: (String code) {
+                    localeNotifier.value = Locale(code, '');
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'en',
+                      child: Text('English'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'ar',
+                      child: Text('العربية'),
+                    ),
+                  ],
+                  child: Container(
+                    width: 46,
+                    height: 46,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color:
+                              const Color(0xFF365CC3).withValues(alpha: 0.04),
+                          blurRadius: 20,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(width: 4),
+                          Text(
+                            Localizations.localeOf(context)
+                                .languageCode
+                                .toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                          const Icon(Icons.arrow_drop_down,
+                              size: 16, color: AppColors.primary),
+                        ],
+                      ),
+                    ),
                   ),
-                ],
+                ),
               ),
-              child: const Icon(Icons.search, color: Colors.black87, size: 22),
-            ),
+              const SizedBox(width: 10),
+              // Search Button
+              GestureDetector(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const SearchScreen())),
+                child: Container(
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF365CC3).withValues(alpha: 0.04),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child:
+                      const Icon(Icons.search, color: Colors.black87, size: 22),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -119,16 +198,20 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Image.network(
-            AppAssets.simCard,
+          CachedNetworkImage(
+            imageUrl: AppAssets.simCard,
             height: 140,
             fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) => const Icon(Icons.sim_card, size: 80),
+            placeholder: (_, __) => const SizedBox(
+              height: 140,
+              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            ),
+            errorWidget: (_, __, ___) => const Icon(Icons.sim_card, size: 80),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'No active plans',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.noActivePlans,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
               color: AppColors.textBlack,
@@ -137,7 +220,7 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Purchase your first plan to get connected',
+            AppLocalizations.of(context)!.purchaseFirstPlan,
             style: TextStyle(
               fontSize: 12,
               color: Colors.black.withValues(alpha: 0.64),
@@ -145,59 +228,28 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final isWeb = MediaQuery.of(context).size.width > 600;
-              final buttonWidth = isWeb ? 240.0 : double.infinity;
-
-              return SizedBox(
-                width: buttonWidth,
-                height: 44,
-                child: isWeb
-                    ? Center(
-                        child: ElevatedButton(
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const PlansScreen()),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            shape: const StadiumBorder(),
-                            elevation: 0,
-                          ),
-                          child: const Text(
-                            'Browse Plans',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      )
-                    : ElevatedButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PlansScreen()),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          shape: const StadiumBorder(),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          'Browse Plans',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-              );
-            },
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PlansScreen()),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: const StadiumBorder(),
+                elevation: 0,
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.browsePlans,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: 12),
           Row(
@@ -206,7 +258,7 @@ class HomeScreen extends StatelessWidget {
               const Icon(Icons.check_circle, color: AppColors.green, size: 14),
               const SizedBox(width: 4),
               Text(
-                'Your device supports eSIM',
+                AppLocalizations.of(context)!.yourDeviceSupportsEsim,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
@@ -221,110 +273,129 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGlobalPlanCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF1A1A2E),
-            Color(0xFF2D2B55),
-            Color(0xFF4E4EDD),
-          ],
-          stops: [0.0, 0.6, 1.0],
+  Widget _buildGlobalPlanCard(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(28),
+      child: Container(
+        width: double.infinity,
+        height: 138,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Color(0xFF1A1A2E),
+              Color(0xFF2F2E68),
+              Color(0xFF4D4BD2),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
         ),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF365CC3).withValues(alpha: 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Global Plan',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    letterSpacing: -0.3,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 18, 140, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.globalPlan,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      height: 1.0,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    AppLocalizations.of(context)!.unlimitedDataCountries,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white.withValues(alpha: 0.58),
+                    ),
+                  ),
+                  const Spacer(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        '\$9.99',
+                        style: TextStyle(
+                          fontSize: 40,
+                          height: 0.88,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: -1.1,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          '\$19.99',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white.withValues(alpha: 0.34),
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor:
+                                Colors.white.withValues(alpha: 0.34),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          AppLocalizations.of(context)!.per7Days,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              right: -34,
+              bottom: -38,
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: AppAssets.earthGlobe,
+                  width: 190,
+                  height: 190,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => Container(
+                    width: 190,
+                    height: 190,
+                    color: const Color(0xFF3C3A9E),
+                  ),
+                  errorWidget: (_, __, ___) => Container(
+                    width: 190,
+                    height: 190,
+                    color: const Color(0xFF3C3A9E),
+                    alignment: Alignment.center,
+                    child:
+                        const Icon(Icons.public, color: Colors.white, size: 72),
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  'Unlimited data in 50+ countries',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white.withValues(alpha: 0.65),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Text(
-                      '\$9.99',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: -1,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '\$19.99',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white.withValues(alpha: 0.35),
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: Colors.white.withValues(alpha: 0.35),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '/ 7 days',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white.withValues(alpha: 0.5),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              AppAssets.earthGlobe,
-              width: 90,
-              height: 90,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) =>
-                  const Icon(Icons.public, color: Colors.white, size: 60),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Text(
       title,
       style: const TextStyle(
@@ -336,18 +407,27 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLocationChips() {
+  Widget _buildLocationChips(BuildContext context) {
     final locations = [
-      {'name': 'Canada', 'flag': AppAssets.flagCA},
-      {'name': 'Germany', 'flag': AppAssets.flagDE},
-      {'name': 'Mexico', 'flag': AppAssets.flagMX},
-      {'name': 'Turkey', 'flag': AppAssets.flagTR},
-      {'name': 'New Zealand', 'flag': AppAssets.flagNZ},
-      {'name': 'Portugal', 'flag': AppAssets.flagPT},
-      {'name': 'Spain', 'flag': AppAssets.flagES},
-      {'name': 'Greece', 'flag': AppAssets.flagGR},
-      {'name': 'China', 'flag': AppAssets.flagCN},
-      {'name': 'Kazakhstan', 'flag': AppAssets.flagKZ},
+      {'name': AppLocalizations.of(context)!.canada, 'flag': AppAssets.flagCA},
+      {'name': AppLocalizations.of(context)!.germany, 'flag': AppAssets.flagDE},
+      {'name': AppLocalizations.of(context)!.mexico, 'flag': AppAssets.flagMX},
+      {'name': AppLocalizations.of(context)!.turkey, 'flag': AppAssets.flagTR},
+      {
+        'name': AppLocalizations.of(context)!.newZealand,
+        'flag': AppAssets.flagNZ
+      },
+      {
+        'name': AppLocalizations.of(context)!.portugal,
+        'flag': AppAssets.flagPT
+      },
+      {'name': AppLocalizations.of(context)!.spain, 'flag': AppAssets.flagES},
+      {'name': AppLocalizations.of(context)!.greece, 'flag': AppAssets.flagGR},
+      {'name': AppLocalizations.of(context)!.china, 'flag': AppAssets.flagCN},
+      {
+        'name': AppLocalizations.of(context)!.kazakhstan,
+        'flag': AppAssets.flagKZ
+      },
     ];
 
     return SingleChildScrollView(
@@ -357,7 +437,8 @@ class HomeScreen extends StatelessWidget {
             .map((loc) => Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(7, 1, 10, 1),
+                    padding: const EdgeInsets.fromLTRB(
+                        10, 1, 10, 1), // Unified padding
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(100),
@@ -376,12 +457,17 @@ class HomeScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ClipOval(
-                          child: Image.network(
-                            loc['flag']!,
+                          child: CachedNetworkImage(
+                            imageUrl: loc['flag']!,
                             width: 28,
                             height: 28,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
+                            placeholder: (_, __) => Container(
+                              width: 28,
+                              height: 28,
+                              color: Colors.grey[200],
+                            ),
+                            errorWidget: (_, __, ___) => Container(
                               width: 28,
                               height: 28,
                               color: Colors.grey[200],
@@ -411,9 +497,9 @@ class HomeScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Popular Destinations',
-          style: TextStyle(
+        Text(
+          AppLocalizations.of(context)!.popularDestinations,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: AppColors.textDark,
@@ -422,9 +508,9 @@ class HomeScreen extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {},
-          child: const Text(
-            'View All',
-            style: TextStyle(
+          child: Text(
+            AppLocalizations.of(context)!.viewAll,
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryLight,
@@ -435,24 +521,24 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPopularGrid() {
+  Widget _buildPopularGrid(BuildContext context) {
     final leftCol = [
       {
-        'name': 'Turkey',
+        'name': AppLocalizations.of(context)!.turkey,
         'price': '\$4.50',
         'img': AppAssets.destTurkey,
         'limited': false,
         'tall': false
       },
       {
-        'name': 'Thailand',
+        'name': AppLocalizations.of(context)!.thailand,
         'price': '\$4.75',
         'img': AppAssets.destThailand,
         'limited': false,
         'tall': true
       },
       {
-        'name': 'United Kingdom',
+        'name': AppLocalizations.of(context)!.unitedKingdom,
         'price': '\$4.80',
         'img': AppAssets.destUK,
         'limited': false,
@@ -461,21 +547,21 @@ class HomeScreen extends StatelessWidget {
     ];
     final rightCol = [
       {
-        'name': 'Greece',
+        'name': AppLocalizations.of(context)!.greece,
         'price': '\$4.20',
         'img': AppAssets.destGreece,
         'limited': true,
         'tall': true
       },
       {
-        'name': 'Egypt',
+        'name': AppLocalizations.of(context)!.egypt,
         'price': '\$5.00',
         'img': AppAssets.destEgypt,
         'limited': false,
         'tall': true
       },
       {
-        'name': 'Italy',
+        'name': AppLocalizations.of(context)!.italy,
         'price': '\$5.25',
         'img': AppAssets.destItaly,
         'limited': false,
@@ -486,17 +572,29 @@ class HomeScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Column(children: leftCol.map(_buildDestCard).toList())),
+        Expanded(
+          child: Column(
+            children:
+                leftCol.map((dest) => _buildDestCard(context, dest)).toList(),
+          ),
+        ),
         const SizedBox(width: 8),
         Expanded(
-            child: Column(children: rightCol.map(_buildDestCard).toList())),
+          child: Column(
+            children:
+                rightCol.map((dest) => _buildDestCard(context, dest)).toList(),
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildDestCard(Map<String, dynamic> dest) {
+  Widget _buildDestCard(BuildContext context, Map<String, dynamic> dest) {
     final bool isTall = dest['tall'] as bool;
     final bool isLimited = dest['limited'] as bool;
+    final bool isWeb = MediaQuery.of(context).size.width > 600;
+    final double imageHeight =
+        isWeb ? (isTall ? 220.0 : 150.0) : (isTall ? 160.0 : 100.0);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -519,13 +617,20 @@ class HomeScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(12)),
-                child: Image.network(
-                  dest['img'] as String,
+                child: CachedNetworkImage(
+                  imageUrl: dest['img'] as String,
                   width: double.infinity,
-                  height: isTall ? 160.0 : 100.0,
+                  height: imageHeight,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    height: isTall ? 160.0 : 100.0,
+                  placeholder: (_, __) => Container(
+                    height: imageHeight,
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                  errorWidget: (_, __, ___) => Container(
+                    height: imageHeight,
                     color: Colors.grey[300],
                     child: const Icon(Icons.image, size: 40),
                   ),
@@ -563,9 +668,9 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Text(
-                          'Limited',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.limited,
+                          style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -593,7 +698,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Starting From',
+                  AppLocalizations.of(context)!.startingFrom,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.black.withValues(alpha: 0.5),

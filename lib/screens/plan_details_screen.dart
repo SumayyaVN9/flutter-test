@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import 'checkout_screen.dart';
 
 class PlanDetailsScreen extends StatelessWidget {
   final Map<String, String> plan;
@@ -18,9 +21,9 @@ class PlanDetailsScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildPlanDetailsSection(),
-                  _buildActivationNote(),
-                  _buildCountryNetworkSection(),
+                  _buildPlanDetailsSection(context),
+                  _buildActivationNote(context),
+                  _buildCountryNetworkSection(context),
                   const SizedBox(height: 100),
                 ],
               ),
@@ -41,7 +44,7 @@ class PlanDetailsScreen extends StatelessWidget {
           children: [
             // Top nav bar
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 10, 24, 10),
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 10),
               child: Row(
                 children: [
                   GestureDetector(
@@ -63,16 +66,17 @@ class PlanDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          plan['name'] ?? 'Plan Details',
+                          plan['name'] ??
+                              AppLocalizations.of(context)!.planDetails,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                        const Text(
-                          'Active',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.active,
+                          style: const TextStyle(
                             fontSize: 13,
                             color: AppColors.green,
                           ),
@@ -92,7 +96,10 @@ class PlanDetailsScreen extends StatelessWidget {
                         const Icon(Icons.account_balance_wallet_outlined,
                             size: 16, color: Colors.black87),
                         const SizedBox(width: 4),
-                        const Text('INR', style: TextStyle(fontSize: 13)),
+                        Text(
+                          AppLocalizations.of(context)!.currencyCode,
+                          style: const TextStyle(fontSize: 13),
+                        ),
                         const SizedBox(width: 2),
                         const Icon(Icons.keyboard_arrow_down,
                             size: 16, color: Colors.black54),
@@ -114,16 +121,18 @@ class PlanDetailsScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            _statBox(plan['data'] ?? '5GB', 'Data'),
+                            _statBox(context, plan['data'] ?? '5GB',
+                                AppLocalizations.of(context)!.data),
                             const SizedBox(width: 20),
-                            _statBox(plan['days'] ?? '60', 'Days'),
+                            _statBox(context, plan['days'] ?? '60',
+                                AppLocalizations.of(context)!.days),
                             const SizedBox(width: 20),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Icon(Icons.wifi,
                                     size: 20, color: Colors.black87),
-                                Text('Network',
+                                Text(AppLocalizations.of(context)!.network,
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.black
@@ -141,7 +150,7 @@ class PlanDetailsScreen extends StatelessWidget {
                             const SizedBox(width: 2),
                             _flagChip(AppAssets.flagDE),
                             const SizedBox(width: 6),
-                            Text('+40 other',
+                            Text(AppLocalizations.of(context)!.other40Plus,
                                 style: TextStyle(
                                     fontSize: 12,
                                     color:
@@ -164,9 +173,9 @@ class PlanDetailsScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
-                        child: const Text(
-                          'Change Plan',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.changePlan,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
@@ -188,9 +197,10 @@ class PlanDetailsScreen extends StatelessWidget {
                   const Icon(Icons.check_circle,
                       color: AppColors.green, size: 16),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Congrats! No extra fees on this activation',
-                    style: TextStyle(fontSize: 13, color: AppColors.green),
+                  Text(
+                    AppLocalizations.of(context)!.noExtraFees,
+                    style:
+                        const TextStyle(fontSize: 13, color: AppColors.green),
                   ),
                 ],
               ),
@@ -201,9 +211,9 @@ class PlanDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPlanDetailsSection() {
+  Widget _buildPlanDetailsSection(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.fromLTRB(24, 12, 24, 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -211,11 +221,11 @@ class PlanDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(24, 16, 24, 12),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
             child: Text(
-              'Plan Details',
-              style: TextStyle(
+              AppLocalizations.of(context)!.planDetails,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -229,11 +239,11 @@ class PlanDetailsScreen extends StatelessWidget {
               children: [
                 _detailRow(
                   Icons.wifi,
-                  'Available',
-                  'Hotspot',
+                  AppLocalizations.of(context)!.available,
+                  AppLocalizations.of(context)!.hotspot,
                   Icons.signal_cellular_alt,
                   '5G/4G/LTE',
-                  'Network',
+                  AppLocalizations.of(context)!.network,
                 ),
                 const Divider(height: 24),
                 _detailRow(
@@ -241,8 +251,8 @@ class PlanDetailsScreen extends StatelessWidget {
                   'Plus',
                   'APN',
                   Icons.bar_chart,
-                  'Realtime, in-app',
-                  'Usage Tracking',
+                  AppLocalizations.of(context)!.usageTrackingTitle,
+                  AppLocalizations.of(context)!.usageTracking,
                 ),
                 const Divider(height: 24),
                 Row(
@@ -253,15 +263,15 @@ class PlanDetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Package activates upon first data usage',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.packageActivates,
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           Text(
-                            'Activation Policy',
+                            AppLocalizations.of(context)!.activationPolicy,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black.withValues(alpha: 0.5),
@@ -316,26 +326,27 @@ class PlanDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActivationNote() {
+  Widget _buildActivationNote(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.orange.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
       ),
-      child: const Text(
-        'Your plan activated when you arrive at your destination. If you don\'t travel by 03/14/2026, it\'ll auto activate on that date and stay active for 30 days.',
-        style: TextStyle(fontSize: 12, color: Colors.black87, height: 1.5),
+      child: Text(
+        AppLocalizations.of(context)!.autoActivateNote,
+        style:
+            const TextStyle(fontSize: 12, color: Colors.black87, height: 1.5),
       ),
     );
   }
 
-  Widget _buildCountryNetworkSection() {
+  Widget _buildCountryNetworkSection(BuildContext context) {
     final countries = [
       {
-        'country': 'Canada',
+        'country': AppLocalizations.of(context)!.canada,
         'flag': AppAssets.flagCA,
         'carriers': [
           'Bell Mobility',
@@ -346,27 +357,27 @@ class PlanDetailsScreen extends StatelessWidget {
         ],
       },
       {
-        'country': 'Chad',
+        'country': AppLocalizations.of(context)!.chad,
         'flag': AppAssets.flagUS,
         'carriers': ['Airtel Chad'],
       },
       {
-        'country': 'Turkey',
+        'country': AppLocalizations.of(context)!.turkey,
         'flag': AppAssets.flagTR,
         'carriers': ['SIMBA', 'Starhub'],
       },
       {
-        'country': 'United Kingdom',
+        'country': AppLocalizations.of(context)!.unitedKingdom,
         'flag': AppAssets.flagUS,
         'carriers': ['O2 (UK)', 'EE', 'Vodafone UK'],
       },
       {
-        'country': 'United States of America',
+        'country': AppLocalizations.of(context)!.usa,
         'flag': AppAssets.flagUS,
         'carriers': ['Verizon Wireless', 'AT&T'],
       },
       {
-        'country': 'Vietnam',
+        'country': AppLocalizations.of(context)!.vietnam,
         'flag': AppAssets.flagUS,
         'carriers': ['Celcom', 'Digi'],
       },
@@ -381,11 +392,11 @@ class PlanDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(24, 16, 24, 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
             child: Text(
-              'Country and Network',
-              style: TextStyle(
+              AppLocalizations.of(context)!.countryAndNetwork,
+              style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black),
@@ -394,7 +405,7 @@ class PlanDetailsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
             child: Text(
-              'Note: The operator may switch to alternative networks in covered countries without notice',
+              AppLocalizations.of(context)!.operatorSwitchNotice,
               style: TextStyle(
                   fontSize: 12, color: Colors.black.withValues(alpha: 0.6)),
             ),
@@ -414,13 +425,13 @@ class PlanDetailsScreen extends StatelessWidget {
                       Row(
                         children: [
                           ClipOval(
-                            child: Image.network(
-                              c['flag'] as String,
+                            child: CachedNetworkImage(
+                              imageUrl: c['flag'] as String,
                               width: 24,
                               height: 24,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
-                                  const Icon(Icons.flag, size: 20),
+                              placeholder: (_, __) => Container(width: 24, height: 24, color: Colors.grey[200]),
+                              errorWidget: (_, __, ___) => const Icon(Icons.flag, size: 20),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -477,7 +488,14 @@ class PlanDetailsScreen extends StatelessWidget {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => CheckoutScreen(plan: plan),
+            ),
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: Colors.white,
@@ -485,15 +503,15 @@ class PlanDetailsScreen extends StatelessWidget {
           shape: const StadiumBorder(),
           elevation: 0,
         ),
-        child: const Text(
-          'Continue Checkout',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        child: Text(
+          AppLocalizations.of(context)!.continueCheckout,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 
-  Widget _statBox(String value, String label) {
+  Widget _statBox(BuildContext context, String value, String label) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -511,12 +529,13 @@ class PlanDetailsScreen extends StatelessWidget {
 
   Widget _flagChip(String url) {
     return ClipOval(
-      child: Image.network(
-        url,
+      child: CachedNetworkImage(
+        imageUrl: url,
         width: 18,
         height: 18,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) =>
+        placeholder: (_, __) => Container(width: 18, height: 18, color: Colors.grey[200]),
+        errorWidget: (_, __, ___) =>
             Container(width: 18, height: 18, color: Colors.grey[300]),
       ),
     );
