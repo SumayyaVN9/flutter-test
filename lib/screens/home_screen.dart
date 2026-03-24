@@ -273,121 +273,142 @@ class HomeScreen extends StatelessWidget {
   Widget _buildGlobalPlanCard(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(28),
-      child: Container(
-        width: double.infinity,
-        height: 138,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF2F2E68),
-              Color(0xFF4D4BD2),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
-        ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 18, 140, 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.globalPlan,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      height: 1.0,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    AppLocalizations.of(context)!.unlimitedDataCountries,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.58),
-                    ),
-                  ),
-                  const Spacer(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final bool isCompact = constraints.maxWidth < 360;
+          final double globeSize = isCompact ? 156 : 190;
+          final double textRightPadding = isCompact ? 116 : 140;
+          final double globeRight = isCompact ? -24 : -34;
+          final double globeBottom = isCompact ? -30 : -38;
+
+          return Container(
+            width: double.infinity,
+            height: 138,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Color(0xFF1A1A2E),
+                  Color(0xFF2F2E68),
+                  Color(0xFF4D4BD2),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+            ),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(24, 18, textRightPadding, 14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        '\$9.99',
-                        style: TextStyle(
-                          fontSize: 40,
-                          height: 0.88,
-                          fontWeight: FontWeight.w800,
+                      Text(
+                        AppLocalizations.of(context)!.globalPlan,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          height: 1.0,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
-                          letterSpacing: -1.1,
+                          letterSpacing: -0.3,
                         ),
                       ),
-                      const SizedBox(width: 6),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          '\$19.99',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white.withValues(alpha: 0.34),
-                            decoration: TextDecoration.lineThrough,
-                            decorationColor:
-                                Colors.white.withValues(alpha: 0.34),
-                          ),
+                      const SizedBox(height: 3),
+                      Text(
+                        AppLocalizations.of(context)!.unlimitedDataCountries,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white.withValues(alpha: 0.58),
                         ),
                       ),
-                      const SizedBox(width: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          AppLocalizations.of(context)!.per7Days,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white.withValues(alpha: 0.5),
+                      const Spacer(),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const Text(
+                                '\$9.99',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  height: 0.88,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  letterSpacing: -1.1,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  '\$19.99',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white.withValues(alpha: 0.34),
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor:
+                                        Colors.white.withValues(alpha: 0.34),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  AppLocalizations.of(context)!.per7Days,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white.withValues(alpha: 0.5),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            Positioned(
-              right: -34,
-              bottom: -38,
-              child: ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: AppAssets.earthGlobe,
-                  width: 190,
-                  height: 190,
-                  fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                    width: 190,
-                    height: 190,
-                    color: const Color(0xFF3C3A9E),
-                  ),
-                  errorWidget: (_, __, ___) => Container(
-                    width: 190,
-                    height: 190,
-                    color: const Color(0xFF3C3A9E),
-                    alignment: Alignment.center,
-                    child:
-                        const Icon(Icons.public, color: Colors.white, size: 72),
+                ),
+                Positioned(
+                  right: globeRight,
+                  bottom: globeBottom,
+                  child: ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: AppAssets.earthGlobe,
+                      width: globeSize,
+                      height: globeSize,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Container(
+                        width: globeSize,
+                        height: globeSize,
+                        color: const Color(0xFF3C3A9E),
+                      ),
+                      errorWidget: (_, __, ___) => Container(
+                        width: globeSize,
+                        height: globeSize,
+                        color: const Color(0xFF3C3A9E),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.public,
+                            color: Colors.white, size: 72),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
