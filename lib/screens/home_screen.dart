@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../locale_notifier.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../widgets/app_image.dart';
 import 'plans_screen.dart';
 import 'search_screen.dart';
 
@@ -198,7 +198,7 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          CachedNetworkImage(
+          AppImage(
             imageUrl: AppAssets.simCard,
             height: 140,
             fit: BoxFit.contain,
@@ -387,7 +387,7 @@ class HomeScreen extends StatelessWidget {
                   right: globeRight,
                   bottom: globeBottom,
                   child: ClipOval(
-                    child: CachedNetworkImage(
+                    child: AppImage(
                       imageUrl: AppAssets.earthGlobe,
                       width: globeSize,
                       height: globeSize,
@@ -478,7 +478,7 @@ class HomeScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ClipOval(
-                          child: CachedNetworkImage(
+                          child: AppImage(
                             imageUrl: loc['flag']!,
                             width: 28,
                             height: 28,
@@ -638,7 +638,7 @@ class HomeScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(12)),
-                child: CachedNetworkImage(
+                child: AppImage(
                   imageUrl: dest['img'] as String,
                   width: double.infinity,
                   height: imageHeight,

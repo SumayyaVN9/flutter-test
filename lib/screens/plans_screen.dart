@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../widgets/app_image.dart';
 import 'plan_details_screen.dart';
 
 class PlansScreen extends StatelessWidget {
@@ -372,7 +372,7 @@ class PlansScreen extends StatelessWidget {
 
   Widget _flagChip(String url) {
     return ClipOval(
-      child: CachedNetworkImage(
+      child: AppImage(
         imageUrl: url,
         width: 18,
         height: 18,

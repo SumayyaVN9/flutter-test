@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../widgets/app_image.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -231,7 +231,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Row(
           children: [
             ClipOval(
-              child: CachedNetworkImage(
+              child: AppImage(
                 imageUrl: item['flag']!,
                 width: 36,
                 height: 36,

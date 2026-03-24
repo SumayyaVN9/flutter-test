@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../widgets/app_image.dart';
 import 'checkout_screen.dart';
 
 class PlanDetailsScreen extends StatelessWidget {
@@ -426,7 +426,7 @@ class PlanDetailsScreen extends StatelessWidget {
                       Row(
                         children: [
                           ClipOval(
-                            child: CachedNetworkImage(
+                            child: AppImage(
                               imageUrl: c['flag'] as String,
                               width: 24,
                               height: 24,
@@ -534,7 +534,7 @@ class PlanDetailsScreen extends StatelessWidget {
 
   Widget _flagChip(String url) {
     return ClipOval(
-      child: CachedNetworkImage(
+      child: AppImage(
         imageUrl: url,
         width: 18,
         height: 18,
