@@ -27,14 +27,16 @@ class EsimApp extends StatelessWidget {
             final double width = MediaQuery.of(context).size.width;
             if (width <= 600) return child!;
             return Material(
-              color: const Color(0xFFE5E5E7), // Slightly darker background for the web
+              color: const Color(
+                  0xFFE5E5E7), // Slightly darker background for the web
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   child: Container(
                     decoration: BoxDecoration(
                       color: const Color(0xFFF5F5F7),
-                      borderRadius: BorderRadius.circular(24), // Highly rounded like modern phones
+                      borderRadius: BorderRadius.circular(
+                          24), // Highly rounded like modern phones
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.1),

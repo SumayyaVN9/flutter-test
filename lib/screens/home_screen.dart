@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
-import '../main.dart';
 import 'plans_screen.dart';
 import 'search_screen.dart';
 
@@ -106,9 +105,7 @@ class HomeScreen extends StatelessWidget {
                 child: PopupMenuButton<String>(
                   tooltip: '',
                   splashRadius: 0,
-                  onSelected: (String code) {
-                    localeNotifier.value = Locale(code, '');
-                  },
+                  onSelected: (_) {},
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
