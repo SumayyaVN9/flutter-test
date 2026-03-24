@@ -344,42 +344,43 @@ class PlanDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildCountryNetworkSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final countries = [
       {
-        'country': AppLocalizations.of(context)!.canada,
+        'country': l10n.canada,
         'flag': AppAssets.flagCA,
         'carriers': [
-          'Bell Mobility',
-          'Rogers Wireless',
-          'SaskTel',
-          'Telus',
-          'Ice Wireless Inc'
+          l10n.bellMobility,
+          l10n.rogersWireless,
+          l10n.saskTel,
+          l10n.telus,
+          l10n.iceWirelessInc
         ],
       },
       {
-        'country': AppLocalizations.of(context)!.chad,
+        'country': l10n.chad,
         'flag': AppAssets.flagUS,
-        'carriers': ['Airtel Chad'],
+        'carriers': [l10n.airtelChad],
       },
       {
-        'country': AppLocalizations.of(context)!.turkey,
+        'country': l10n.turkey,
         'flag': AppAssets.flagTR,
-        'carriers': ['SIMBA', 'Starhub'],
+        'carriers': [l10n.simba, l10n.starhub],
       },
       {
-        'country': AppLocalizations.of(context)!.unitedKingdom,
+        'country': l10n.unitedKingdom,
         'flag': AppAssets.flagUS,
-        'carriers': ['O2 (UK)', 'EE', 'Vodafone UK'],
+        'carriers': [l10n.o2Uk, l10n.ee, l10n.vodafoneUk],
       },
       {
-        'country': AppLocalizations.of(context)!.usa,
+        'country': l10n.usa,
         'flag': AppAssets.flagUS,
-        'carriers': ['Verizon Wireless', 'AT&T'],
+        'carriers': [l10n.verizonWireless, l10n.att],
       },
       {
-        'country': AppLocalizations.of(context)!.vietnam,
+        'country': l10n.vietnam,
         'flag': AppAssets.flagUS,
-        'carriers': ['Celcom', 'Digi'],
+        'carriers': [l10n.celcom, l10n.digi],
       },
     ];
 

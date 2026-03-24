@@ -2,6 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter/material.dart';
+import 'locale_notifier.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/plans_screen.dart';
@@ -11,8 +12,6 @@ import 'screens/search_screen.dart';
 void main() {
   runApp(const EsimApp());
 }
-
-final localeNotifier = ValueNotifier<Locale>(const Locale('en', ''));
 
 class EsimApp extends StatelessWidget {
   const EsimApp({super.key});

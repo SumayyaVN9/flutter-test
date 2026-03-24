@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../locale_notifier.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
 import 'plans_screen.dart';
@@ -105,16 +106,18 @@ class HomeScreen extends StatelessWidget {
                 child: PopupMenuButton<String>(
                   tooltip: '',
                   splashRadius: 0,
-                  onSelected: (_) {},
+                  onSelected: (value) {
+                    localeNotifier.value = Locale(value, '');
+                  },
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
+                    PopupMenuItem<String>(
                       value: 'en',
-                      child: Text('English'),
+                      child: Text(AppLocalizations.of(context)!.english),
                     ),
-                    const PopupMenuItem<String>(
+                    PopupMenuItem<String>(
                       value: 'ar',
-                      child: Text('العربية'),
+                      child: Text(AppLocalizations.of(context)!.arabic),
                     ),
                   ],
                   child: Container(

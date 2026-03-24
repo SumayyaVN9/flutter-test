@@ -1,16 +1,89 @@
-# esim_app
+# 📱 esim_app
 
-A new Flutter project.
+A modern Flutter application for browsing and purchasing eSIM plans, with full support for **English 🇺🇸 and Arabic 🇸🇦 localization**.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠️ Getting Started
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Prerequisites
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* Flutter SDK (>= 3.6.1)
+* Dart SDK
+* Android Studio / VS Code
+
+---
+
+### 📦 Installation
+
+```bash
+git clone https://github.com/your-username/esim_app.git
+cd esim_app
+flutter pub get
+```
+
+---
+
+### ▶️ Run the App
+
+```bash
+flutter run
+```
+
+---
+
+## 🌐 Localization Setup (English & Arabic)
+
+This project uses Flutter's built-in localization (l10n).
+
+### ✅ Enabled in `pubspec.yaml`
+
+```yaml
+flutter:
+  generate: true
+```
+
+---
+
+### 📁 Localization Files
+
+Located in:
+
+```
+lib/l10n/
+```
+
+* `app_en.arb` → English
+* `app_ar.arb` → Arabic
+
+
+---
+
+### 🌍 Usage in UI
+
+```dart
+Text(AppLocalizations.of(context)!.welcome)
+```
+
+---
+
+## 📂 Project Structure
+
+```
+lib/
+│
+├── l10n/                # Localization files (ARB)
+├── constants/          # App constants
+├── screens/            # UI screens
+├── widgets/            # Reusable widgets
+└── main.dart           # Entry point
+```
+
+---
+
+## 📱 Platforms Supported
+
+* ✅ Android
+* ✅ iOS
+* ✅ Web

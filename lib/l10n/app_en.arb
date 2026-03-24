@@ -104,5 +104,20 @@
   "usaAndOneMore": "USA & 1 more",
   "other40Plus": "+40 other",
   "currencyCode": "INR",
-  "chad": "Chad"
+  "chad": "Chad",
+  "bellMobility": "Bell Mobility",
+  "rogersWireless": "Rogers Wireless",
+  "saskTel": "SaskTel",
+  "telus": "Telus",
+  "iceWirelessInc": "Ice Wireless Inc",
+  "airtelChad": "Airtel Chad",
+  "simba": "SIMBA",
+  "starhub": "Starhub",
+  "o2Uk": "O2 (UK)",
+  "ee": "EE",
+  "vodafoneUk": "Vodafone UK",
+  "verizonWireless": "Verizon Wireless",
+  "att": "AT&T",
+  "celcom": "Celcom",
+  "digi": "Digi"
 }
