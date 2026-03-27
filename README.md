@@ -37,36 +37,10 @@ flutter run
 
 This project uses Flutter's built-in localization (l10n).
 
-### ✅ Enabled in `pubspec.yaml`
-
-```yaml
-flutter:
-  generate: true
-```
-
----
-
-### 📁 Localization Files
-
-Located in:
-
-```
-lib/l10n/
-```
-
-* `app_en.arb` → English
-* `app_ar.arb` → Arabic
 
 
 ---
 
-### 🌍 Usage in UI
-
-```dart
-Text(AppLocalizations.of(context)!.welcome)
-```
-
----
 
 ## 📂 Project Structure
 
